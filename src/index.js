@@ -1,3 +1,3 @@
-const message = 'Hello worm!';
+import { setupServer } from './server.js';
 
-console.log(message);
+setupServer();
