@@ -11,7 +11,7 @@ export const getContactsController = async (req, res) => {
   });
 };
 
-export const getContactByIdController = async (req, res) => {
+export const getContactByIdController = async (req, res, next) => {
   const { contactId } = req.params;
 
   //Відповідь, якщо формат/тип ID невірний
@@ -25,10 +25,14 @@ export const getContactByIdController = async (req, res) => {
   const contact = await getContactById(contactId);
 
   // Відповідь, якщо контакт не знайдено
+  // if (!contact) {
+  //   res.status(404).json({
+  //     message: 'Contact not found',
+  //   });
+  //   return;
+  // }
   if (!contact) {
-    res.status(404).json({
-      message: 'Contact not found',
-    });
+    next(new Error('Contact not found'));
     return;
   }
 
