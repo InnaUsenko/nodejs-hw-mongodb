@@ -2,6 +2,7 @@ import {
   getAllContacts,
   getContactById,
   createContact,
+  deleteContact,
 } from '../services/contacts.js';
 import { isObjectIdOrHexString } from 'mongoose';
 import createHttpError from 'http-errors';
@@ -18,22 +19,17 @@ export const getContactsController = async (req, res) => {
 };
 
 //GET contact by ID
-export const getContactByIdController = async (req, res, next) => {
+export const getContactByIdController = async (req, res) => {
   const { contactId } = req.params;
 
   //Відповідь, якщо формат/тип ID невірний
   if (!isObjectIdOrHexString(contactId)) {
-    res.status(400).json({
-      message: 'Invalid ID type',
-    });
-    return;
+    throw createHttpError(400, 'Invalid ID type');
   }
 
   const contact = await getContactById(contactId);
 
   if (!contact) {
-    // next(new Error('Contact not found'));
-    // return;
     throw createHttpError(404, 'Contact not found');
   }
 
@@ -45,7 +41,7 @@ export const getContactByIdController = async (req, res, next) => {
   });
 };
 
-//POST new Contact
+//POST new contact
 export const createContactController = async (req, res) => {
   const contact = await createContact(req.body);
 
@@ -54,4 +50,21 @@ export const createContactController = async (req, res) => {
     message: `Successfully created a contact!`,
     data: contact,
   });
+};
+
+//DELETE contact
+export const deleteContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+  if (!isObjectIdOrHexString(contactId)) {
+    throw createHttpError(400, 'Invalid ID type');
+  }
+
+  const contact = await deleteContact(contactId);
+
+  if (!contact) {
+    next(createHttpError(404, 'Contact not found'));
+    return;
+  }
+
+  res.status(204).send();
 };
