@@ -3,6 +3,7 @@ import {
   getContactById,
   createContact,
   deleteContact,
+  updateContact,
 } from '../services/contacts.js';
 import { isObjectIdOrHexString } from 'mongoose';
 import createHttpError from 'http-errors';
@@ -67,4 +68,29 @@ export const deleteContactController = async (req, res, next) => {
   }
 
   res.status(204).send();
+};
+
+//UPDATE contact
+export const upsertContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+  if (!isObjectIdOrHexString(contactId)) {
+    throw createHttpError(400, 'Invalid ID type');
+  }
+
+  const result = await updateContact(contactId, req.body, {
+    upsert: true,
+  });
+
+  if (!result) {
+    next(createHttpError(404, 'Contact not found'));
+    return;
+  }
+
+  const status = result.isNew ? 201 : 200;
+
+  res.status(status).json({
+    status,
+    message: `Successfully upserted a contact!`,
+    data: result.contact,
+  });
 };
