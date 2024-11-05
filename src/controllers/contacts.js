@@ -1,5 +1,6 @@
 import { getAllContacts, getContactById } from '../services/contacts.js';
 import { isObjectIdOrHexString } from 'mongoose';
+import createHttpError from 'http-errors';
 
 export const getContactsController = async (req, res) => {
   const contacts = await getAllContacts();
@@ -24,22 +25,16 @@ export const getContactByIdController = async (req, res, next) => {
 
   const contact = await getContactById(contactId);
 
-  // Відповідь, якщо контакт не знайдено
-  // if (!contact) {
-  //   res.status(404).json({
-  //     message: 'Contact not found',
-  //   });
-  //   return;
-  // }
   if (!contact) {
-    next(new Error('Contact not found'));
-    return;
+    // next(new Error('Contact not found'));
+    // return;
+    throw createHttpError(404, 'Student not found');
   }
 
   // Відповідь, якщо контакт знайдено
   res.status(200).json({
     status: 200,
-    message: 'Successfully found contacts!',
+    message: `Successfully found contacts! with id ${contactId}`,
     data: contact,
   });
 };
