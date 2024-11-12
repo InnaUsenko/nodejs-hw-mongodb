@@ -5,7 +5,6 @@ import {
   deleteContact,
   updateContact,
 } from '../services/contacts.js';
-import { isObjectIdOrHexString } from 'mongoose';
 import createHttpError from 'http-errors';
 
 //GET contacts
@@ -22,11 +21,6 @@ export const getContactsController = async (req, res) => {
 //GET contact by ID
 export const getContactByIdController = async (req, res) => {
   const { contactId } = req.params;
-
-  //Відповідь, якщо формат/тип ID невірний
-  if (!isObjectIdOrHexString(contactId)) {
-    throw createHttpError(400, 'Invalid ID type');
-  }
 
   const contact = await getContactById(contactId);
 
@@ -56,9 +50,6 @@ export const createContactController = async (req, res) => {
 //DELETE contact
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  if (!isObjectIdOrHexString(contactId)) {
-    throw createHttpError(400, 'Invalid ID type');
-  }
 
   const contact = await deleteContact(contactId);
 
@@ -72,9 +63,6 @@ export const deleteContactController = async (req, res, next) => {
 //UPDATE contact
 export const upsertContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  if (!isObjectIdOrHexString(contactId)) {
-    throw createHttpError(400, 'Invalid ID type');
-  }
 
   const result = await updateContact(contactId, req.body, {
     upsert: true,
@@ -96,9 +84,6 @@ export const upsertContactController = async (req, res, next) => {
 //PATCH contact
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  if (!isObjectIdOrHexString(contactId)) {
-    throw createHttpError(400, 'Invalid ID type');
-  }
 
   const result = await updateContact(contactId, req.body);
 
