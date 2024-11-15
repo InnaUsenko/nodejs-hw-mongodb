@@ -14,8 +14,11 @@ import {
   upsertContactController,
   patchContactController,
 } from '../controllers/contacts.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
+
+router.use(authenticate);
 
 //GET contacts
 router.get('/', ctrlWrapper(getContactsController));
