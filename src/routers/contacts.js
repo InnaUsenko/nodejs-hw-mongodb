@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { validateBody } from '../middlewares/validateBody.js';
+import { setUserId } from '../middlewares/setUserId.js';
 import {
   createContactSchema,
   updateContactSchema,
@@ -29,6 +30,7 @@ router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
 //POST new Contact
 router.post(
   '/',
+  setUserId,
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
