@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { isValidId } from '../middlewares/isValidId.js';
+import { isOwner } from '../middlewares/isOwner.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { setUserId } from '../middlewares/setUserId.js';
 import {
@@ -25,7 +25,7 @@ router.use(authenticate);
 router.get('/', ctrlWrapper(getContactsController));
 
 //GET contact by ID
-router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
+router.get('/:contactId', isOwner, ctrlWrapper(getContactByIdController));
 
 //POST new Contact
 router.post(
@@ -36,12 +36,12 @@ router.post(
 );
 
 //DELETE
-router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
+router.delete('/:contactId', isOwner, ctrlWrapper(deleteContactController));
 
 //PUT
 router.put(
   '/:contactId',
-  isValidId,
+  isOwner,
   validateBody(updateContactSchema),
   ctrlWrapper(upsertContactController),
 );
@@ -50,7 +50,7 @@ export default router;
 //PATCH
 router.patch(
   '/:contactId',
-  isValidId,
+  isOwner,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );
