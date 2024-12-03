@@ -33,6 +33,7 @@ export const setupServer = () => {
       message: 'Hello worm!',
     });
   });
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   // Додаємо роутер до app як middleware
   app.use(router);
@@ -40,8 +41,6 @@ export const setupServer = () => {
   app.use('*', notFoundHandler);
 
   app.use(errorHandler);
-
-  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
