@@ -139,6 +139,11 @@ export const requestResetToken = async (email) => {
     to: email,
     subject: 'Reset your password',
     html,
+  }).catch((error) => {
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
   });
 };
 
