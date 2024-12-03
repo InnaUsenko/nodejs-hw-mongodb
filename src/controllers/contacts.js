@@ -55,7 +55,14 @@ export const getContactByIdController = async (req, res) => {
 //POST new contact
 export const createContactController = async (req, res) => {
   const userId = req.user._id;
-  const payload = { ...req.body, userId };
+  const photo = req.file;
+  let payload = { ...req.body, userId };
+
+  if (photo) {
+    const photoUrl = await saveFileToUploadDir(photo);
+    payload = { ...payload, photo: photoUrl };
+  }
+
   const contact = await createContact(payload);
 
   res.status(201).json({
@@ -78,11 +85,19 @@ export const deleteContactController = async (req, res, next) => {
   res.status(204).send();
 };
 
-//UPDATE contact
+//PUT (UPDATE) contact
 export const upsertContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const userId = req.user._id;
-  const result = await updateContact(contactId, req.body, userId, {
+  const photo = req.file;
+  let superBody = req.body;
+
+  if (photo) {
+    const photoUrl = await saveFileToUploadDir(photo);
+    superBody = { ...superBody, photo: photoUrl };
+  }
+
+  const result = await updateContact(contactId, superBody, userId, {
     upsert: true,
   });
 
@@ -102,22 +117,16 @@ export const upsertContactController = async (req, res, next) => {
 //PATCH contact
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const photo = req.file;
   const userId = req.user._id;
-  let photoUrl;
+  const photo = req.file;
+  let superBody = req.body;
 
   if (photo) {
-    photoUrl = await saveFileToUploadDir(photo);
+    const photoUrl = await saveFileToUploadDir(photo);
+    superBody = { ...superBody, photo: photoUrl };
   }
 
-  const result = await updateContact(
-    contactId,
-    {
-      ...req.body,
-      photo: photoUrl,
-    },
-    userId,
-  );
+  const result = await updateContact(contactId, superBody, userId);
 
   if (!result) {
     throw createHttpError(404, 'Contact not found');
