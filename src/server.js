@@ -7,6 +7,8 @@ import { env } from './utils/env.js';
 // Імпортуємо middleware
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+// Імпортуємо статичні файли
+import { UPLOAD_DIR } from './constants/index.js';
 
 // Читаємо змінну оточення PORT
 const PORT = Number(env('PORT', '3000'));
@@ -38,6 +40,8 @@ export const setupServer = () => {
   app.use('*', notFoundHandler);
 
   app.use(errorHandler);
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
