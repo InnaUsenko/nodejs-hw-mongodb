@@ -10,7 +10,11 @@ import { sendEmail } from '../utils/sendMail.js';
 
 import { UsersCollection } from '../db/models/user.js';
 import { SessionsCollection } from '../db/models/session.js';
-import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
+import {
+  FIFTEEN_MINUTES,
+  FIVE_MINUTES_TXT,
+  ONE_DAY,
+} from '../constants/index.js';
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -111,7 +115,7 @@ export const requestResetToken = async (email) => {
     },
     env('JWT_SECRET'),
     {
-      expiresIn: '15m',
+      expiresIn: FIVE_MINUTES_TXT,
     },
   );
 
