@@ -11,6 +11,8 @@ import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { env } from '../utils/env.js';
 
 //GET contacts
 export const getContactsController = async (req, res) => {
@@ -59,7 +61,12 @@ export const createContactController = async (req, res) => {
   let payload = { ...req.body, userId };
 
   if (photo) {
-    const photoUrl = await saveFileToUploadDir(photo);
+    let photoUrl;
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
     payload = { ...payload, photo: photoUrl };
   }
 
@@ -93,7 +100,12 @@ export const upsertContactController = async (req, res, next) => {
   let superBody = req.body;
 
   if (photo) {
-    const photoUrl = await saveFileToUploadDir(photo);
+    let photoUrl;
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
     superBody = { ...superBody, photo: photoUrl };
   }
 
@@ -122,7 +134,13 @@ export const patchContactController = async (req, res, next) => {
   let superBody = req.body;
 
   if (photo) {
-    const photoUrl = await saveFileToUploadDir(photo);
+    let photoUrl;
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+
     superBody = { ...superBody, photo: photoUrl };
   }
 
