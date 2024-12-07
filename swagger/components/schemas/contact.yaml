@@ -3,8 +3,6 @@ required:
   - _id
   - name
   - phoneNumber
-  - email
-  - isFavourite
   - contactType
 properties:
   _id:
@@ -12,19 +10,19 @@ properties:
     type: string
     example: 65e4decdd286b30065d54af9
   name:
-    description: "Contact's name"
+    description: "Contact's name.  Should be between 3 and 20"
     type: string
     example: 'John Doe'
   phoneNumber:
-    description: "Contact's phone number"
+    description: "Contact's phone number.  Should be between 3 and 20"
     type: string
     example: +380990000001
   email:
-    description: "Contact's age"
+    description: "Contact's email.  Should be between 3 and 20"
     type: string
-    example: test-mail@example.com
+    example: test@example.com
   contactType:
-    description: "Contact's average mark. Should be between 1 and 12"
+    description: "Contact's type."
     type: string
     enum: ['work', 'home', 'personal']
   isFavourite:
