@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import router from './routers/index.js';
 import { env } from './utils/env.js';
 // Імпортуємо middleware
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 // Імпортуємо статичні файли
@@ -34,6 +35,7 @@ export const setupServer = () => {
     });
   });
   app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
 
   // Додаємо роутер до app як middleware
   app.use(router);
