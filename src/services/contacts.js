@@ -44,8 +44,7 @@ export const getAllContacts = async ({
 };
 
 export const getContactById = async (contactId, userId) => {
-  const contact = await ContactsCollection.findById(contactId);
-  isOwner(userId, contact.userId);
+  const contact = await ContactsCollection.findById(contactId, userId);
   return contact;
 };
 
