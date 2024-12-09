@@ -343,11 +343,6 @@
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "name",
-                  "phoneNumber",
-                  "contactType"
-                ],
                 "properties": {
                   "name": {
                     "description": "Contact's name",
